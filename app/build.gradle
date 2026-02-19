@@ -41,6 +41,10 @@ dependencies {
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("org.reactivestreams:reactive-streams:1.0.4")
     implementation libs.firebase.database
+    implementation libs.firebase.auth
+    implementation libs.credentials
+    implementation libs.credentials.play.services.auth
+    implementation libs.googleid
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

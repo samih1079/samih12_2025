@@ -14,7 +14,7 @@ import abs.samih.samih12_2025.mytasksTable.MyTaskQuery;
 version
 عند تغيير اي شي يخص جدول او داول علينا تغيير رقم الاصدار يتم بناء قاعدة البيانات من جديد
 */
-@Database(entities = { MyTask.class},version =1)
+@Database(entities = { MyTask.class},version =2)
 /**
  * الفئة المسؤولة عن بناء قاعدة البايانات بكل جداولها
  * وتوفر لنا كائن للتعامل مع قاعدة البيانات

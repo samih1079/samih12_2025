@@ -50,6 +50,7 @@ public class TasksRecyclerAdapter extends RecyclerView.Adapter<TasksRecyclerAdap
         holder.tvTitle.setText(current.getShortTitle());
         holder.tvText.setText(current.getText());
         holder.tvImportance.setText("Importance:" + current.getImportance());
+
     }
 
     @Override

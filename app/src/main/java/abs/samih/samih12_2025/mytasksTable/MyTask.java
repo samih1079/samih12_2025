@@ -16,6 +16,7 @@ public class MyTask
      * מזהה ייחודי של נושא המטלה
      */
     public String sbjId;
+    private String key;
 
     /** رقم المهمة */
     @PrimaryKey(autoGenerate = true)
@@ -36,6 +37,10 @@ public class MyTask
     public long userId;
     //عنوان الصورة
     private String image;
+
+    public String getKey() {
+        return key;
+    }
 
 
     public String getId() {
@@ -141,5 +146,9 @@ public class MyTask
                 ", userId=" + userId +
                 ", image='" + image + '\'' +
                 '}';
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
