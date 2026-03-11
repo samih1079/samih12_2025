@@ -71,4 +71,26 @@ public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
         addAll(tasksList);
         notifyDataSetChanged();
     }
+    
+/**
+*  פתיחת אפליקצית שליחת sms
+* @param msg .. ההודעה שרוצים לשלוח
+* @param phone
+*/
+public void openSendSmsApp(String msg, String phone)
+{
+   //אינטנט מרומז לפתיחת אפליקצית ההודות סמס
+   Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+   //מעבירים מספר הטלפון
+   smsIntent.setData(Uri.parse("smsto:"+phone));
+   //ההודעה שנרצה שתופיע באפליקצית ה סמס
+   smsIntent.putExtra("sms_body",msg);
+   smsIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+   smsIntent.addCategory(Intent.CATEGORY_DEFAULT);
+   //פתיחת אפליקציית ה סמס
+   getContext().startActivity(smsIntent);
+}
+
+
+    
 }
