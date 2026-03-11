@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 import abs.samih.samih12_2025.R;
-
+//وسيط لعرض معطياتظظظ
 public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
     private ArrayList<MyTask> tasksList;
     private Context context;
@@ -29,14 +29,14 @@ public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
         super(context, resource);
         this.context = context;
         this.tasksList = null;
-    }
-
+    } 
+    // dsflkjlkdsfjglkdjfljdfgjldkfgldf
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View vitem = convertView;
         if (vitem == null)
             vitem = LayoutInflater.from(getContext()).inflate(R.layout.task_item_layout, parent, false);
-
+        //dlfjlkdfjgldjlgjldfg
         MyTask current = getItem(position);
 
         ImageView imageView = vitem.findViewById(R.id.imgVitm);
