@@ -1,6 +1,10 @@
 package abs.samih.samih12_2025.mytasksTable;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +32,7 @@ public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
     public TaskArrayAdapter(TaskListViewActivity context, int resource) {
         super(context, resource);
         this.context = context;
-        this.tasksList = null;
+        this.tasksList = new ArrayList<>();
     } 
     // dsflkjlkdsfjglkdjfljdfgjldkfgldf
     @Override
@@ -43,6 +47,14 @@ public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
         TextView tvTitle = vitem.findViewById(R.id.tvItmTitle);
         TextView tvText = vitem.findViewById(R.id.tvItmText);
         TextView tvImportance = vitem.findViewById(R.id.tvItmImportance);
+        ImageView imgBtnSendSmsitm = vitem.findViewById(R.id.imgBtnSendSmsitm);
+
+        imgBtnSendSmsitm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSendSmsApp(current.shortTitle, "");
+            }
+        });
 
         tvTitle.setText(current.getShortTitle());
         tvText.setText(current.getText());
@@ -68,6 +80,7 @@ public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
 
     public void setTasksList(ArrayList<MyTask> tasksList) {
         this.tasksList = tasksList;
+        clear();
         addAll(tasksList);
         notifyDataSetChanged();
     }

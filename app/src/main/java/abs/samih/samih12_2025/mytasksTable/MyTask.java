@@ -2,46 +2,51 @@ package abs.samih.samih12_2025.mytasksTable;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.io.Serializable;
+
 /**
- * فئة تُمثل مهمة
+ * Class representing a task.
  */
 @Entity
-public class MyTask
+public class MyTask implements Serializable
 {
+    /** Reminder time in milliseconds */
+    public long reminderTime;
     /**
-     * מ;הה יחודי למטלה לצורך אחסון במסד ניתונים
+     * Unique identifier for storage in database.
      */
     public String id;
     /**
-     * מזהה ייחודי של נושא המטלה
+     * Unique identifier of the task subject.
      */
     public String sbjId;
     private String key;
 
-    /** رقم المهمة */
+    /** Task ID for Room */
     @PrimaryKey(autoGenerate = true)
     public long keyId;
-    /** درجة الاهمية 1-5 */
+    /** Importance level 1-5 */
     public int importance;
-    /**عنوان قصير */
+    /** Short title */
     public String shortTitle;
-    /** نص المهمة */
+    /** Task description */
     public String text;
-    /**  زمن بناء المهمة*/
+    /** Creation time */
     public long time;
-    /** هل تمت المهمة */
+
+    /** Whether the task is completed */
     public boolean isCompleted;
-    /**رقم موضوع المهمة*/
+    /** Subject ID */
     public long subjId;
-    /**رقم المستعمل الذي اضاف المهمة*/
+    /** User ID */
     public long userId;
-    //عنوان الصورة
+    /** Image URL or URI string */
     private String image;
 
     public String getKey() {
         return key;
     }
-
 
     public String getId() {
         return id;
@@ -99,6 +104,14 @@ public class MyTask
         this.time = time;
     }
 
+    public long getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(long reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
     public boolean isCompleted() {
         return isCompleted;
     }
@@ -141,6 +154,7 @@ public class MyTask
                 ", shortTitle='" + shortTitle + '\'' +
                 ", text='" + text + '\'' +
                 ", time=" + time +
+                ", reminderTime=" + reminderTime +
                 ", isCompleted=" + isCompleted +
                 ", subjId=" + subjId +
                 ", userId=" + userId +

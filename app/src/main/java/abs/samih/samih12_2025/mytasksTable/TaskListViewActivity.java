@@ -82,12 +82,14 @@ public class TaskListViewActivity extends AppCompatActivity {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override//دالة معالج حدث تقوم بتلقى نسخة عن كل المعطيات عند أي تغيير
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                adapter.clear();//حذف كل المعطيات بالوسيط
+               ArrayList<MyTask> tasks = new ArrayList<>();
                 for (DataSnapshot taskSnapshot : snapshot.getChildren()) {
                     //  استخراج كل المعطيات على وتحويلها لكائن ملائم//
                     MyTask task = taskSnapshot.getValue(MyTask.class);
-                    adapter.add(task);//اضافة كل معطى (كائن) للمنسق
+                    tasks.add(task);//اضافة كل معطى (كائن) للمنسق
                 }
+                adapter.clear();//حذف كل المعطيات بالوسيط
+                adapter.setTasksList(tasks);
                 adapter.notifyDataSetChanged();//اعلام المنسق بالتغيير
                 Toast.makeText(TaskListViewActivity.this, "Data fetched successfully", Toast.LENGTH_SHORT).show();
 
