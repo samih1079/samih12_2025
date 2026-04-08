@@ -4,7 +4,10 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +51,7 @@ public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
         TextView tvText = vitem.findViewById(R.id.tvItmText);
         TextView tvImportance = vitem.findViewById(R.id.tvItmImportance);
         ImageView imgBtnSendSmsitm = vitem.findViewById(R.id.imgBtnSendSmsitm);
-
+        imageView.setImageBitmap(stringToBitmap(current.getImage()));
         imgBtnSendSmsitm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,8 +87,24 @@ public class TaskArrayAdapter extends ArrayAdapter<MyTask> {
         addAll(tasksList);
         notifyDataSetChanged();
     }
-    
-/**
+
+    /**
+     * Decodes the image string and returns the corresponding Bitmap object.
+     *
+     * @param imageString the image string to decode
+     * @return the decoded Bitmap object
+     */
+    private Bitmap stringToBitmap(String imageString) {
+        if (imageString == null || imageString.isEmpty()) return null;
+        try {
+            byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
 *  פתיחת אפליקצית שליחת sms
 * @param msg .. ההודעה שרוצים לשלוח
 * @param phone

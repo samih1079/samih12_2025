@@ -1,9 +1,13 @@
 package abs.samih.samih12_2025.mytasksTable;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,12 +33,14 @@ public class TasksRecyclerAdapter extends RecyclerView.Adapter<TasksRecyclerAdap
         TextView tvTitle;
         TextView tvText;
         TextView tvImportance;
+        ImageView ivImage;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvItmTitle);
             tvText = itemView.findViewById(R.id.tvItmText);
             tvImportance = itemView.findViewById(R.id.tvItmImportance);
+            ivImage = itemView.findViewById(R.id.imgVitm);
         }
     }
     @NonNull
@@ -50,7 +56,7 @@ public class TasksRecyclerAdapter extends RecyclerView.Adapter<TasksRecyclerAdap
         holder.tvTitle.setText(current.getShortTitle());
         holder.tvText.setText(current.getText());
         holder.tvImportance.setText("Importance:" + current.getImportance());
-
+        holder.ivImage.setImageBitmap(stringToBitmap(current.getImage()));
     }
 
     @Override
@@ -63,6 +69,16 @@ public class TasksRecyclerAdapter extends RecyclerView.Adapter<TasksRecyclerAdap
         notifyDataSetChanged();// מודיעים למתאם שחל שינוי וצריך להבנות מחדש
     }
 
+    /**
+     * Decodes the image string and returns the corresponding Bitmap object.
+     *
+     * @param imageString the image string to decode
+     * @return the decoded Bitmap object
+     */
+    private Bitmap stringToBitmap(String imageString) {
+        byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
 
 //    private ArrayList<MyTask> tasksList;
 //    private Context context;
