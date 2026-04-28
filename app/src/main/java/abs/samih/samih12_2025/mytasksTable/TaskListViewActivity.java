@@ -30,7 +30,7 @@ import abs.samih.samih12_2025.R;
 public class TaskListViewActivity extends AppCompatActivity {
 
     private ListView listView;
-    private TaskArrayAdapter taskArrayAdapter;
+    private  MyTaskAdapter taskArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class TaskListViewActivity extends AppCompatActivity {
         });
 
         listView = findViewById(R.id.listView);
-        taskArrayAdapter = new TaskArrayAdapter(this, R.layout.task_item_layout);
+        taskArrayAdapter = new MyTaskAdapter(this, R.layout.task_item_layout);
         listView.setAdapter(taskArrayAdapter);
 
         FloatingActionButton fabAddTask = findViewById(R.id.fabAddTask);
@@ -73,7 +73,7 @@ public class TaskListViewActivity extends AppCompatActivity {
      *
      * @param adapter
      */
-    private void getAllFromFirebase(TaskArrayAdapter adapter) {
+    private void getAllFromFirebase(MyTaskAdapter adapter) {
         //عنوان قاعدة البيانات
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // عنوان مجموعة المعطيات داخل قاعدة البيانات
@@ -89,7 +89,7 @@ public class TaskListViewActivity extends AppCompatActivity {
                     tasks.add(task);//اضافة كل معطى (كائن) للمنسق
                 }
                 adapter.clear();//حذف كل المعطيات بالوسيط
-                adapter.setTasksList(tasks);
+                adapter.addAll(tasks);
                 adapter.notifyDataSetChanged();//اعلام المنسق بالتغيير
                 Toast.makeText(TaskListViewActivity.this, "Data fetched successfully", Toast.LENGTH_SHORT).show();
 

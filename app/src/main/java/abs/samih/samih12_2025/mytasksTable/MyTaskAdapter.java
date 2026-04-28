@@ -34,6 +34,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import abs.samih.samih12_2025.R;
+import abs.samih.samih12_2025.AiByFirbase.SmartTaskActivity;
 
 /**
  * אוסף ניתונים ומתאם בין הניתונים לרכיב גרפי שמציג אוסף ניתונים
@@ -80,6 +81,8 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
         ImageView btnEdit=vitem.findViewById(R.id.imgBtnEdititm);
         ImageView btnCall=vitem.findViewById(R.id.imgBtnCallitm);
         ImageView btnDel=vitem.findViewById(R.id.imgBtnDeleteitm);
+        ImageView btnAiAssist = vitem.findViewById(R.id.imgBtnAiAssist);
+
         //קבלת הנתון (עצם) הנוכחי
         MyTask current=getItem(position);
         //הצגת הנתונים על שדות הריב הגרפי
@@ -110,6 +113,17 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
             }
         });
 
+        if (btnAiAssist != null) {
+            btnAiAssist.setOnClickListener(v -> {
+
+                Intent intent = new Intent(getContext(), SmartTaskActivity.class);
+                // Pass the task title as the topic for AI suggestions
+                intent.putExtra("TASK_TOPIC", current.getShortTitle());
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+            });
+        }
+
         return vitem;
 
     }
@@ -123,7 +137,7 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
      */
     public void openSendSmsApp(String msg, String phone)
     {
-        //אינטנט מרומז לפתיחת אפליקצית ההודות סמס
+        //אינטנט מרומז לפתיחת אפليקצית ההודות סמס
         Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
         //מעבירים מספר הטלפון
         smsIntent.setData(Uri.parse("smsto:"+phone));
@@ -141,7 +155,7 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
      */
     public void openSendWhatsAppV1(String msg, String phone)
     {
-        //אינטנט מרומז לפתיחת אפליקצית ההודות סמס
+        //אינטנט מרומز לפתיחת אפليקצית ההודות סמס
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         //מעבירים מספר הטלפון
@@ -157,12 +171,12 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
     }
     /**
      *  פתיחת אפליקצית שליחת whatsapp
-     * @param msg .. ההודעה שרוצים לשלוח
+     * @param msg .. ההודעה שروצים לשלוח
      * @param phone
      */
     public void openSendWhatsAppV2(String msg, String phone)
     {
-        //אינטנט מרומז לפתיחת אפליקצית ההודות סמס
+        //אינטנט מרומז לפתיחת אפليקצית ההודות סמס
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);;
         String url = null;
         try {
@@ -175,7 +189,7 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
         sendIntent.setData(Uri.parse(url));
         sendIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         sendIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        //פתיחת אפליקציית ה סמס
+        //פתיחת אפليקציית ה סמס
         getContext().startActivity(sendIntent);
     }
 
@@ -199,7 +213,7 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
             }
             else
             {
-                //אינטנט מרומז לפתיחת אפליקצית ההודות סמס
+                //אינטנט מרומز לפתיחת אפليקצית ההודות סמס
                 Intent phone_intent = new Intent(Intent.ACTION_CALL);
                 phone_intent.setData(Uri.parse("tel:" + phone));
                 getContext().startActivity(phone_intent);
@@ -223,7 +237,7 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
 //                .load(imageUrL)//הורדת התמונה לפי כתובת
 //                .centerCrop()
 //                .error(R.drawable.androidparty)//התמונה שמוצגת אם יש בעיה בהורדת התמונה
-//                .resize(90,90)//שינוי גודל התמונה
+//                .resize(90,90)//שינוي גודל התמונה
 //                .into(toView);// להציג בריכיב התמונה המיועד לתמונה זו
 //    }
 
@@ -334,7 +348,7 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
 //        }
 //        // הפניה למיקום הקובץ באיחסון
 //        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(fileURL);
-//        //מחיקת הקובץ והוספת מאזין שבודק אם ההורדה הצליחה או לא
+//        //محيקת הקובץ והוספת מאזין שבודק אם ההורדה הצליחה או לא
 //      storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
 //          @Override
 //          public void onComplete(@NonNull Task<Void> task) {
@@ -350,12 +364,12 @@ public class MyTaskAdapter extends ArrayAdapter<MyTask> {
 //    }
 
     private void checkCallPhonePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//בדיקת גרסאות
-            //בדיקה אם ההשאה לא אושרה בעבר
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//بדיקת גרסאות
+            //بדיקה אם ההשאה לא אושרה בעבר
             if (checkSelfPermission(getContext(),Manifest.permission.CALL_PHONE) == PermissionChecker.PERMISSION_DENIED) {
                 //רשימת ההרשאות שרוצים לבקש אישור
                 String[] permissions = {Manifest.permission.CALL_PHONE};
-                //בקשת אישור ההשאות (שולחים קוד הבקשה)
+                //בקשת אישור ההשאות (שולחים קود הבקשה)
                 //התשובה תתקבל בפעולה onRequestPermissionsResult
                 requestPermissions((Activity) getContext(),permissions, 100);
             }

@@ -25,14 +25,17 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:padding="8dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvItmTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:text="For title" />
 
             <TextView
@@ -51,7 +54,6 @@
                 android:id="@+id/checkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Completed" />
 
             <LinearLayout
@@ -64,6 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="8dp"
                     android:src="@android:drawable/ic_menu_send" />
 
                 <ImageView
@@ -71,6 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="8dp"
                     android:src="@android:drawable/sym_action_call" />
 
                 <ImageView
@@ -78,6 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="8dp"
                     android:src="@android:drawable/ic_menu_edit" />
 
                 <ImageView
@@ -85,7 +90,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="8dp"
                     android:src="@android:drawable/ic_delete" />
+
+                <ImageView
+                    android:id="@+id/imgBtnAiAssist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    android:src="@android:drawable/ic_menu_info_details"
+                    android:contentDescription="AI Assistant" />
 
             </LinearLayout>
 

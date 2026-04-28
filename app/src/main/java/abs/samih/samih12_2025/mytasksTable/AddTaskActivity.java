@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,16 +28,20 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
@@ -104,7 +107,7 @@ public class AddTaskActivity extends AppCompatActivity {
         btnSetReminder = findViewById(R.id.btnSetReminder);
         tvReminderTime = findViewById(R.id.tvReminderTime);
 
-        btnAddTask.setOnClickListener(v -> handleSaveTask());
+        btnAddTask.setOnClickListener(v -> validateAndSaveTask());
         imgBtn.setOnClickListener(v -> checkPermissionAndPickImage());
 
         btnSetReminder.setOnClickListener(v -> showDateTimePicker());
@@ -138,29 +141,38 @@ public class AddTaskActivity extends AppCompatActivity {
         }
     }
 
-    private void handleSaveTask() {
+    private void validateAndSaveTask() {
+        // Flag to track if all fields are valid
+        boolean isValid = true;
+        // Get task details from UI
         String title = etTitle.getText().toString().trim();
         String text = etText.getText().toString().trim();
-        if (title.isEmpty() || text.isEmpty()) {
-            Toast.makeText(this, "Title and Text are required", Toast.LENGTH_SHORT).show();
+        if (title.isEmpty()) {
+            etTitle.setError("Title is required");
+            isValid = false;
+        }
+        if (text.isEmpty()) {
+            etText.setError("Text is required");
+            isValid = false;
+        }
+        if (!isValid) {
             return;
         }
-
         MyTask task = new MyTask();
         task.setShortTitle(title);
         task.setText(text);
         task.setImportance(skbrImportance.getProgress());
         task.setTime(System.currentTimeMillis());
         task.setReminderTime(selectedReminderTime);
-
         if (imageUri != null) {
-            convertImageAndSave(task, imageUri);
-        } else {
-            completeSave(task);
+            //convertImageAndSave(task, imageUri);
+            task.setImage(convertImageToString(imageUri));
+
         }
+        completeSave(task);
     }
 
-    private void convertImageAndSave(MyTask task, Uri uri) {
+    private void convertImageAndSaveExecuter(MyTask task, Uri uri) {
         btnAddTask.setEnabled(false);
         if (tvUplodedImg != null) tvUplodedImg.setText("Converting image...");
 
@@ -195,10 +207,39 @@ public class AddTaskActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Converts an image Uri to a Base64 string.
+     *
+     * @param uri The Uri of the image to convert.
+     * @return The Base64 string representation of the image.
+     */
+    public String convertImageToString(Uri uri) {
+        InputStream inputStream = null;
+        String imageString = null;
+        // تحتوي هذه الدالة على وظيفة تحويل الصورة من مكان التخزين المؤقت إلى نص بنموذج Base64 ليتم تخزينه في قاعدة البيانات، وهذا يتيح للبرنامج عرض الصورة من قاعدة البيانات في وقت لاحق بدون الحاجة إلى فتح الصورة من جهاز المستخدم.
+        try {
+            inputStream = getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            if (bitmap == null) {
+                Toast.makeText(this, "Failed to process image", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            // Compress image to keep Base64 string within reasonable limit
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, outputStream);
+            byte[] imageBytes = outputStream.toByteArray();
+            imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+            return imageString;
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "Failed file not found", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException(e);
+        }
+    }
+
     private void completeSave(MyTask task) {
         // Save to Room
         AppDataBase.getDB(this).getMyTaskQuery().insertTask(task);
-        
+
         // Save to Firebase
         saveTaskInFirebase(task);
 
@@ -213,7 +254,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private void scheduleAlarm(MyTask task) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        
+
         if (alarmManager == null) {
             return;
         }
@@ -231,7 +272,7 @@ public class AddTaskActivity extends AppCompatActivity {
         intent.putExtra("title", task.getShortTitle());
         intent.putExtra("text", task.getText());
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) task.getTime(), intent, 
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) task.getTime(), intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         try {
@@ -248,7 +289,15 @@ public class AddTaskActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("tasks");
         String key = myRef.push().getKey();
         task.setKey(key);
-        myRef.child(key).setValue(task);
+        myRef.child(key).setValue(task).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(AddTaskActivity.this, "Task saved successfully", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(AddTaskActivity.this, "Task save failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

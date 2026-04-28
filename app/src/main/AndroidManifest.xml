@@ -58,6 +58,11 @@
             android:name=".geminiExample.MainActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".AiByFirbase.SmartTaskActivity"
+            android:exported="false"
+            android:label="Smart Task Assistant" />
+
     </application>
 
 </manifest>
